@@ -1,12 +1,12 @@
 package com.devops.log_analyzer.controller;
 
+import com.devops.log_analyzer.model.LogEntry;
+import com.devops.log_analyzer.service.LogService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devops.log_analyzer.model.LogEntry;
+import java.util.List;
 
 
 @RestController
@@ -14,15 +14,19 @@ import com.devops.log_analyzer.model.LogEntry;
 
 public class LogController {
 
-    @GetMapping("/health")
-    public String checkHealth() {
-        return "Log Analyzer Service is up and running";
+    public final LogService logService;
+
+    public LogController(LogService logService) {
+        this.logService = logService;
     }
 
-    @PostMapping
-    public String receiveLog(@RequestBody LogEntry logEntry) {
-        System.out.println("Log recibido: " + logEntry);
+    @GetMapping("/health")
+    public String checkHealth() {
+        return "El analizador de logs está funcionando correctamente.";
+    }
 
-        return "Log procesado exitosamente con ID: " + logEntry.getId();
+    @GetMapping
+    public List<LogEntry> getAllLogs() {
+        return logService.getSampleLogs();
     }
 }
