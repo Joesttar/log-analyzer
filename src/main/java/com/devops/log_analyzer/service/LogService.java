@@ -39,6 +39,27 @@ public class LogService {
             "Tiempo de respuesta elevado en la pasarela de pago",
             2100
         ));
+
+        logs.add(new LogEntry(
+            "LOG-104",
+            LocalDateTime.now().minusMinutes(10),
+            "WARN",
+            "payment-service",
+            "Tiempo de respuesta elevada en la pasarela de pago",
+            80
+        ));
+
         return logs;
     }
+
+    public List<LogEntry> getLogsByLevel(String level) {
+        List<LogEntry> allLogs = getSampleLogs();
+
+        if (level == null || level.trim().isEmpty()){
+            return allLogs;
+        }
+        return allLogs.stream()
+            .filter(log -> log.getLevel().equalsIgnoreCase(level))
+            .collect(Collectors.toList());
+    }    
 }
