@@ -1,14 +1,10 @@
 package com.devops.log_analyzer.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.devops.log_analyzer.model.LogEntry;
 import com.devops.log_analyzer.service.LogService;
+import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RestController
@@ -16,20 +12,33 @@ import com.devops.log_analyzer.service.LogService;
 
 public class LogController {
 
- private final LogService logService;
+  private final LogService logService;
 
+    // Inyección de dependencias: Spring nos da el servicio automáticamente
     public LogController(LogService logService) {
         this.logService = logService;
     }
 
     @GetMapping("/health")
     public String checkHealth() {
-        return "El analizador de logs está funcionando correctamente.";
+        return "Log Analyzer Service is UP - " + LocalDateTime.now();
     }
 
-    // @RequestParam(required = false) hace que el parámetro ?level= sea opcional
-    @GetMapping
-    public List<LogEntry> getLogs(@RequestParam(required = false) String level) {
-        return logService.getLogsByLevel(level);
+    @PostMapping
+    public String receiveLog(@RequestBody LogEntry logEntry) {
+        logService.saveLog(logEntry); // Guardamos el log en la lista
+        System.out.println("Log guardado de: " + logEntry.getServiceName());
+        return "Log procesado y guardado correctamente";
     }
+
+    @GetMapping
+    public List<LogEntry> getAllLogs() {
+        return logService.getAllLogs(); // Retornamos todos los logs guardados
+    }
+
+    @GetMapping("/filter")
+        public List<LogEntry> filterLogs(@RequestParam String level){
+            // RequestParam captura todo lo que venga despues del signo '?' en un URL
+            return logService.getLogsByLevel((level));
+        }
 }

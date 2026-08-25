@@ -3,53 +3,39 @@ package com.devops.log_analyzer.model;
 import java.time.LocalDateTime;
 
 public class LogEntry {
-   private String id;
-   private LocalDateTime timestamp;
-   private String level;
-   private String serviceName;
-   private String message;
-   private long responseTimeMs;
+    private String id;
+    private LocalDateTime timestamp;
+    private String level;
+    private String serviceName;
+    private String message;
+    private long responseTimeMs;
 
+    // Constructor vacío (necesario para Spring)
+    public LogEntry() {}
 
-public LogEntry() {}
+    // Constructor con todos los campos
+    public LogEntry(String id, LocalDateTime timestamp, String level, String serviceName, String message, long responseTimeMs) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.level = level;
+        this.serviceName = serviceName;
+        this.message = message;
+        this.responseTimeMs = responseTimeMs;
+    }
 
-public LogEntry(String id, LocalDateTime timestamp, String level, String serviceName, String message, long responseTimeMs){
-   this.id = id;
-   this.timestamp = timestamp;
-   this.level = level;
-   this.serviceName = serviceName;
-   this.message = message;
-   this.responseTimeMs = responseTimeMs;
-}
+    // --- GETTERS (Lo que el compilador no encontraba) ---
+    public String getId() { return id; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getLevel() { return level; }
+    public String getServiceName() { return serviceName; }
+    public String getMessage() { return message; }
+    public long getResponseTimeMs() { return responseTimeMs; }
 
-public String getId() { return id;}
-public void setId(String id) { this.id = id; }
-
-public LocalDateTime getTimestamp() { return timestamp; }
-public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
-
-public String getLevel() { return level; }
-public void setLevel(String level) { this.level = level; }
-
-public String getServiceName() { return serviceName; }
-public void setServiceName(String serviceName) { this.serviceName = serviceName; }
-
-public String getMessage(){ return message; }
-public void setMessage(String message) { this.message = message; }
-
-public long getResponseTimeMs() { return responseTimeMs; }
-public void setReponseTimeMs(long responseTimeMs) { this.responseTimeMs = responseTimeMs; }
-
-@Override
-
-public String toString(){
-   return "LogEntry{" +
-         "id='" + id + '\'' +
-         ", timestamp= " + timestamp +
-         ", level='" + level + '\'' +
-         ", serviceName='" + serviceName + '\'' +
-         ", message='" + message + '\'' +
-         ", reponseTimeMs=" + responseTimeMs +
-         '}';
-   }
+    // --- SETTERS ---
+    public void setId(String id) { this.id = id; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    public void setLevel(String level) { this.level = level; }
+    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
+    public void setMessage(String message) { this.message = message; }
+    public void setResponseTimeMs(long responseTimeMs) { this.responseTimeMs = responseTimeMs; }
 }

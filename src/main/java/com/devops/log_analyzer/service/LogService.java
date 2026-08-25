@@ -1,65 +1,47 @@
-package com.devops.log_analyzer.service;
+package com.devops.log_analyzer.service; // <--- Fíjate que tenga el "_" y sea "service"
 
 import com.devops.log_analyzer.model.LogEntry;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-
 public class LogService {
-    public List<LogEntry> getSampleLogs(){
-        List<LogEntry> logs = new ArrayList<>();
+    private final List<LogEntry> logs = new ArrayList<>();
 
-        logs.add(new LogEntry(
-            "LOG-101",
-            LocalDateTime.now(),
-            "INFO",
-            "auth.service",
-            "Usuario autenticado correctamente",
-            120
-        ));
+    public void saveLog(LogEntry entry) {
+        logs.add(entry);
+        saveToFile(entry);
+    }
 
-        logs.add(new LogEntry (
-            "LOG-102",
-            LocalDateTime.now(),
-            "ERROR",
-            "database-service",
-            "Fallo de conexion a la base de datos PostgreSQL",
-            4500
-        ));
+    private void saveToFile(LogEntry entry) {
+        try (FileWriter fw = new FileWriter("logs_output.txt", true);
+             PrintWriter out = new PrintWriter(fw)) {
+            
+            String logLine = String.format("[%s] %s - %s: %s (%d ms)",
+                    entry.getTimestamp(), 
+                    entry.getLevel(),
+                    entry.getServiceName(),
+                    entry.getMessage(),
+                    entry.getResponseTimeMs());
+            
+            out.println(logLine);
+        } catch (IOException e) {
+            System.err.println("Error al escribir el archivo: " + e.getMessage());
+        }
+    }
 
-        logs.add(new LogEntry(
-            "LOG-103",
-            LocalDateTime.now(),
-            "WARN",
-            "payment-service",
-            "Tiempo de respuesta elevado en la pasarela de pago",
-            2100
-        ));
-
-        logs.add(new LogEntry(
-            "LOG-104",
-            LocalDateTime.now().minusMinutes(10),
-            "WARN",
-            "payment-service",
-            "Tiempo de respuesta elevada en la pasarela de pago",
-            80
-        ));
-
+    public List<LogEntry> getAllLogs() {
         return logs;
     }
 
     public List<LogEntry> getLogsByLevel(String level) {
-        List<LogEntry> allLogs = getSampleLogs();
-
-        if (level == null || level.trim().isEmpty()){
-            return allLogs;
-        }
-        return allLogs.stream()
-            .filter(log -> log.getLevel().equalsIgnoreCase(level))
-            .collect(Collectors.toList());
-    }    
+        return logs.stream()
+                   .filter(log -> log.getLevel().equalsIgnoreCase(level))
+                   .collect(Collectors.toList());
+    }
 }
