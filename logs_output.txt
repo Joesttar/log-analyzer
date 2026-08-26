@@ -1,0 +1,2 @@
+[2024-05-20T12:00] WARN - database-check: Prueba de escritura en archivo persistente (150 ms)
+[2024-05-20T10:10] ERROR - gateway-service: Fallo en el login de administrador (20 ms)

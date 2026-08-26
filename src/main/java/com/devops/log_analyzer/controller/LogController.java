@@ -5,6 +5,9 @@ import com.devops.log_analyzer.service.LogService;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -41,4 +44,10 @@ public class LogController {
             // RequestParam captura todo lo que venga despues del signo '?' en un URL
             return logService.getLogsByLevel((level));
         }
+    
+    @GetMapping("/stats")
+    public java.util.Map<String, Long> getStats() {
+        return logService.getStats();
+    }
+    
 }

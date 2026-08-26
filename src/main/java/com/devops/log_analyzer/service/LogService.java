@@ -44,4 +44,13 @@ public class LogService {
                    .filter(log -> log.getLevel().equalsIgnoreCase(level))
                    .collect(Collectors.toList());
     }
+
+    public java.util.Map<String, Long> getStats(){
+        return logs.stream()
+            .collect(Collectors.groupingBy(
+                LogEntry::getLevel,
+                Collectors.counting()
+            ));
+    }
+
 }
